@@ -1,0 +1,67 @@
+launch tmux -Lkitty
+
+#font_family      FiraCode Nerd Font
+#font_family      Fira Code Retina Nerd Font Complete
+#font_family      JetBrains Mono Regular Nerd Font Complete Mono
+#font_family      JetBrains Mono Regular Nerd Font Complete
+font_family      JetBrains Mono Medium Nerd Font Complete
+#font_family      JetBrains Mono Medium Medium Nerd Font Complete Mono
+font_size        10
+bold_font        JetBrains Mono Medium Medium Nerd Font Complete Mono
+italic_font      auto
+bold_italic_font auto
+
+adjust_line_height 2
+adjust_column_width 0
+
+/*window_margin_width 0.0*/
+/*window_padding_width 0.0*/
+/*window_border_width 0.0*/
+/*draw_minimal_borders yes*/
+
+background_opacity 0.9
+foreground #dddddd
+background #282a36
+
+remember_window_size  no
+initial_window_width 100c
+initial_window_height 30c
+
+cursor #ff6ac1
+cursor_shape underline
+cursor_underline_thickness 1.5
+
+copy_on_select yes
+
+window_alert_on_bell no
+
+map alt+n new_os_window
+
+/* COLORs */
+background: #282a36
+foreground: #eff0eb
+
+color0    #282a36
+color1    #ff5c57
+color2    #5af78e
+color3    #f3f99d
+color4    #57c7ff
+color5    #ff6ac1
+color6    #9aedfe
+color7    #f1f1f0
+
+color8    #686868
+color9    #ff5c57
+color10   #5af78e
+color11   #f3f99d
+color12   #57c7ff
+color13   #ff6ac1
+color14   #9aedfe
+color15   #f1f1f0
+
+mark1_foreground  #f1f1f0
+
+# Scrollback
+scrollback_lines 2000
+
+dynamic_background_opacity yes
