@@ -15,15 +15,12 @@ Plug 'rose-pine/neovim'
 "Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-rhubarb'
 Plug 'mhinz/vim-startify'
-
-"Plug 'itchyny/lightline.vim'
 Plug 'nvim-lualine/lualine.nvim'
-
 
 Plug 'jiangmiao/auto-pairs'
 Plug 'windwp/nvim-ts-autotag'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"Plug 'junegunn/fzf.vim'
 "Plug 'honza/vim-snippets'
 "Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
@@ -33,21 +30,23 @@ Plug 'mileszs/ack.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-ragtag'
-"Plug 'mg979/vim-xtabline'
 "Plug 'akinsho/bufferline.nvim'
 Plug 'romgrk/barbar.nvim'
 "Plug 'sbdchd/neoformat'
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
-
-Plug 'leafgarland/typescript-vim'
+"Plug 'leafgarland/typescript-vim'
 "Plug 'alvan/vim-closetag'
 "Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'mhinz/vim-signify'
 Plug 'kshenoy/vim-signature'
+Plug 'kevinhwang91/nvim-bqf'
 
 Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/nvim-lsp-installer'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'folke/trouble.nvim'
@@ -56,19 +55,14 @@ Plug 'hrsh7th/vim-vsnip'
 
 " Linter
 Plug 'nvim-lua/plenary.nvim'
-Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'mhartington/formatter.nvim'
+"Plug 'jose-elias-alvarez/null-ls.nvim'
 "Plug 'mfussenegger/nvim-lint'
 
 " Languages
-"Plug 'sheerun/vim-polyglot'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'fatih/vim-go', { 'for': 'go' }
-
-"Plug 'ryanoasis/vim-devicons'
-"Plug 'kyazdani42/nvim-web-devicons'
-
-
-"Plug 'posva/vim-vue'
+Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } } " Run call doge#install() manually after
 
 call plug#end()
 
@@ -112,6 +106,12 @@ autocmd BufNewFile,BufReadPost *.css,*.scss setl shiftwidth=2
 autocmd FileType yaml setl shiftwidth=2 expandtab
 
 
+" TELESCOPE
+nnoremap <silent><C-p> <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <silent><C-l> <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+nnoremap <leader>fs <cmd>lua require('telescope.builtin').search_history()<cr>
 
 " set filetypes as typescript.tsx
 "autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.tsx
@@ -180,36 +180,6 @@ let g:startify_custom_header = startify#center([
   \ '   ',
   \ ])
 
-" Dashboard
-"let g:dashboard_default_executive ='fzf'
-
-" Customize fzf colors to match your color scheme
-" 'hl':      ['fg', 'PreProc'],
-"\ 'hl':      ['fg', 'PreProc'],
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Identifier'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Identifier'],
-  \ 'info':    ['fg', 'Comment'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-let $FZF_DEFAULT_COMMAND = 'ag -g ""'
-let g:fzf_action = {
-  	\ 'B': 'bd|e'}
-nnoremap <silent> <C-p> :Files<CR>
-nnoremap <silent> <C-l> :Buffers<CR>
-nnoremap <C-s> :Ag 
-" Change Ag list color and show preview
-autocmd VimEnter * command! -nargs=* Ag call fzf#vim#ag(<q-args>, '--color-path 400 --color-line-number 400', fzf#vim#with_preview())
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
-
 set hidden
 
 "BUFFERS
@@ -242,8 +212,9 @@ syntax enable
 " NVM CMP (AUTOCOMPLETIONS)
 set completeopt=menu,menuone,noselect
 
-" Close quickfix list after select
-autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+" QUICKFIX LIST
+" Ecs to close quickfix window
+"nnoremap <silent> <ESC> :ccl<CR>
 
 inoremap <c-n> <c-x><c-o>
 
@@ -251,10 +222,15 @@ lua << EOF
 require('plugins/theme')
 require('plugins/barbar')
 require('plugins/lualine')
-require('plugins/lspconfig')
+--require('plugins/lspconfig')
+require('plugins/lsp-installer')
+require('plugins/cmp')
 require('plugins/nvim-tree')
 require('plugins/treesitter')
 require('plugins/trouble')
-require('plugins/null-ls')
+-- require('plugins/null-ls')
 require('plugins/ts-autotag')
+require('plugins/nvim-bqf')
+require('plugins/telescope')
+require('plugins/formatter')
 EOF

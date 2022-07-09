@@ -26,82 +26,68 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 	buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 	buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-	buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.show_line_diagnostics()<CR>', opts)
+	buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 	buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
 	buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 	buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
-	buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-	--buf_set_keymap('n', '<space>f', '<cmd>EslintFixAll<CR>', opts)
+	--buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+	buf_set_keymap('n', '<space>f', '<cmd>Format<CR>', opts)
 
 end
-
--- Setup nvim-cmp.
-local cmp = require'cmp'
-
-cmp.setup({
-	snippet = {
-		-- REQUIRED - you must specify a snippet engine
-		expand = function(args)
-			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-			-- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-			-- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-			-- require'snippy'.expand_snippet(args.body) -- For `snippy` users.
-		end,
-	},
-	mapping = {
-		['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' }),
-		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-		['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-		['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
-		['<C-e>'] = cmp.mapping({
-			i = cmp.mapping.abort(),
-			c = cmp.mapping.close(),
-		}),
-		['<CR>'] = cmp.mapping.confirm({ select = true }),
-	},
-	sources = cmp.config.sources({
-	{ name = 'nvim_lsp' },
-	{ name = 'vsnip' }, -- For vsnip users.
-		-- { name = 'luasnip' }, -- For luasnip users.
-		-- { name = 'ultisnips' }, -- For ultisnips users.
-		-- { name = 'snippy' }, -- For snippy users.
-	}, {
-		{ name = 'buffer' },
-		})
-})
-
--- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline('/', {
-	sources = {
-	{ name = 'buffer' }
-	}
-})
-
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(':', {
-	sources = cmp.config.sources({
-	{ name = 'path' }
-	}, {
-		{ name = 'cmdline' }
-		})
-})
 
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- vim.lsp.set_log_level("debug")
--- require('lspconfig').eslint.setup{}
+nvim_lsp.eslint.setup{
+	handlers = {
+		['window/showMessageRequest'] = function(_, result, params) return result end
+	},
+	init_options = {
+		maxTsServerMemory = 1096
+	}
+}
+
+local function filter(arr, fn)
+  if type(arr) ~= "table" then
+    return arr
+  end
+
+  local filtered = {}
+  for k, v in pairs(arr) do
+    if fn(v, k, arr) then
+      table.insert(filtered, v)
+    end
+  end
+
+  return filtered
+end
+
+local function filterReactDTS(value)
+  return string.match(value.uri, 'react/index.d.ts') == nil
+end
 
 nvim_lsp['tsserver'].setup {
 	capabilities = capabilities,
 	on_attach = on_attach,
+	filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
 	flags = {
 		debounce_text_changes = 150,
 	},
-	handlers = {
-		--['textDocument/publishDiagnostics'] = function(...) end
-	}
+	init_options = {
+		maxTsServerMemory = 1096
+	},
+	--handlers = {
+		----['textDocument/publishDiagnostics'] = function(...) end,
+		--['textDocument/definition'] = function(err, result, method, ...)
+			--if vim.tbl_islist(result) and #result > 1 then
+				--local filtered_result = filter(result, filterReactDTS)
+				--return vim.lsp.handlers['textDocument/definition'](err, filtered_result, method, ...)
+			--end
+
+			--vim.lsp.handlers['textDocument/definition'](err, result, method, ...)
+		--end
+	--}
 }
 
 nvim_lsp['solargraph'].setup {
