@@ -1,6 +1,7 @@
 require'lualine'.setup({
 	options = {
-		theme = 'tokyonight',
+		theme = 'catppuccin',
+		--theme = 'tokyonight',
 		-- theme = 'rose-pine',
 		section_separators = {
 			left = '',

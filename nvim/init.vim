@@ -9,7 +9,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'edkolev/tmuxline.vim'
 Plug 'arzg/vim-colors-xcode'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'rose-pine/neovim'
+"Plug 'rose-pine/neovim'
+Plug 'catppuccin/nvim', {'as': 'catppuccin'}
 
 " Editor Extensions
 "Plug 'SirVer/ultisnips'
@@ -69,9 +70,6 @@ call plug#end()
 " map escape
 imap jj <esc>
 
-" map paste toggle
-set pastetoggle=<F2>
-
 " show line numbers
 set number
 
@@ -118,10 +116,6 @@ nnoremap <leader>fs <cmd>lua require('telescope.builtin').search_history()<cr>
 
 " vim-closetag
 let g:closetag_filenames = '*.html,*.js,*.vue,*.html.erb,*.tsx'
-
-" COC
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Golang
 let g:go_info_mode='gopls'
@@ -219,6 +213,7 @@ set completeopt=menu,menuone,noselect
 inoremap <c-n> <c-x><c-o>
 
 lua << EOF
+require('plugins/catpuccin')
 require('plugins/theme')
 require('plugins/barbar')
 require('plugins/lualine')
