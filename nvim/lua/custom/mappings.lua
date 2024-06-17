@@ -43,6 +43,8 @@ M.barbar = {
     ["0<BS>"] = {':BufferLast<CR>', opts = opts, "Last Buffer" },
     ["qq"] = {':BufferClose <CR>', opts = opts, "Close Buffer" },
     ["<leader>b"] = {':BufferPick <CR>', opts = opts, "Pick Buffer" },
+    ["<leader><"]= {':BufferMovePrevious <CR>', opts = opts, "Move Buffer Left" },
+    ["<leader>>"] = {':BufferMoveNext <CR>', opts = opts, "Move Buffer Right" },
   }
 }
 
@@ -96,6 +98,22 @@ M.lspconfig = {
 M.telescope = {
   n = {
     ["<leader>fd"] = { "<cmd>lua require('custom/configs/telescope').live_grep_in_folder()<cr>", "Live grep in folder" },
+  },
+}
+
+M.obsidian = {
+  n = {
+    ["<leader>os"] = { "<cmd>ObsidianSearch<CR>", "Search Obsidian" },
+    ["<leader>oq"] = { "<cmd>ObsidianQuickSwitch<CR>", "Quick Switch" },
+    ["<leader>on"] = { "<cmd>ObsidianNew<CR>", "New Note" },
+    ["<leader>oo"] = { "<cmd>ObsidianOpen<CR>", "Open Obsidian" },
+    ["<leader>or"] = { "<cmd>ObsidianRename<CR>", "Rename Obsidian" },
+    -- ["<leader>ch"] = {
+    --   function()
+    --     return require("obsidian").util.toggle_checkbox()
+    --   end,
+    --   opts = { buffer = true },
+    -- },
   },
 }
 
